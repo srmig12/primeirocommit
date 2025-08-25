@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>InfoCity - Reporte Problemas Urbanos</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f4f4f4;
+    }
+    header {
+      background-color: #0077cc;
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+    main {
+      padding: 20px;
+      max-width: 1000px;
+      margin: auto;
+    }
+    .map {
+      background-color: #ddd;
+      height: 300px;
+      text-align: center;
+      line-height: 300px;
+      margin-bottom: 30px;
+    }
+    form {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      margin-bottom: 30px;
+    }
+    form input, form select, form textarea {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      margin-bottom: 20px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    .problem-list {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+    }
+    footer {
+      background-color: #0077cc;
+      color: white;
+      text-align: center;
+      padding: 10px;
+      margin-top: 40px;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>InfoCity</h1>
+    <p>Reporte problemas de limpeza e segurança urbana</p>
+  </header>
+
+  <main>
+
+    <div class="map">
+      Mapa Interativo (em breve)
+    </div>
+
+    <form>
+      <h2>Reportar Problema</h2>
+
+      <label for="categoria">Categoria:</label>
+      <select id="categoria">
+        <option value="lixo">Lixo Acumulado</option>
+        <option value="buraco">Buraco na Rua</option>
+        <option value="enchente">Enchente / Inundação</option>
+        <option value="outro">Outro</option>
+      </select>
+
+      <label for="descricao">Descrição:</label>
+      <textarea id="descricao" rows="4" placeholder="Descreva o problema..."></textarea>
+
+      <label for="foto">Foto (opcional):</label>
+      <input type="file" id="foto" accept="image/*">
+
+      <label for="local">Localização (bairro, rua...):</label>
+      <input type="text" id="local" placeholder="Ex: Rua das Flores, 123 - Centro">
+
+      <button type="submit">Enviar Relato</button>
+    </form>
+
+    <div class="problem-list">
+      <h2>Últimos Problemas Reportados</h2>
+      <ul>
+        <li>📍 Rua A, Centro - Buraco grande na via</li>
+        <li>📍 Avenida B - Lixo acumulado próximo ao ponto de ônibus</li>
+        <li>📍 Rua C - Alagamento após chuva forte</li>
+      </ul>
+    </div>
+
+  </main>
+
+  <footer>
+    &copy; 2025 InfoCity - Projeto com o Rafa
+  </footer>
+
+</body>
+</html>
