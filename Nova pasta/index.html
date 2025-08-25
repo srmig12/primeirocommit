@@ -2,111 +2,140 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
+  <title>InfoCity - Protótipo com Mapa</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>InfoCity - Reporte Problemas Urbanos</title>
+  <!-- CSS do Leaflet -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
   <style>
     body {
       font-family: Arial, sans-serif;
       margin: 0;
-      padding: 0;
-      background: #f4f4f4;
+      background: #f4f6f8;
     }
     header {
-      background-color: #0077cc;
+      background: #0077ff;
       color: white;
-      padding: 20px;
+      padding: 15px;
       text-align: center;
+      font-size: 1.4em;
     }
-    main {
-      padding: 20px;
-      max-width: 1000px;
-      margin: auto;
-    }
-    .map {
-      background-color: #ddd;
+    #map {
+      width: 100%;
       height: 300px;
-      text-align: center;
-      line-height: 300px;
-      margin-bottom: 30px;
+    }
+    .container {
+      padding: 15px;
+    }
+    .btn {
+      background: #0077ff;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 8px;
+      cursor: pointer;
+      margin: 5px 0;
     }
     form {
+      display: none;
+      margin-top: 10px;
       background: white;
-      padding: 20px;
+      padding: 15px;
       border-radius: 8px;
-      margin-bottom: 30px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     }
     form input, form select, form textarea {
       width: 100%;
-      padding: 10px;
-      margin-top: 10px;
-      margin-bottom: 20px;
+      margin: 8px 0;
+      padding: 8px;
       border: 1px solid #ccc;
-      border-radius: 4px;
+      border-radius: 6px;
     }
-    .problem-list {
+    .report {
       background: white;
-      padding: 20px;
-      border-radius: 8px;
-    }
-    footer {
-      background-color: #0077cc;
-      color: white;
-      text-align: center;
       padding: 10px;
-      margin-top: 40px;
+      margin: 10px 0;
+      border-radius: 8px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.1);
     }
   </style>
 </head>
 <body>
-
-  <header>
-    <h1>InfoCity</h1>
-    <p>Reporte problemas de limpeza e segurança urbana</p>
-  </header>
-
-  <main>
-
-    <div class="map">
-      Mapa Interativo (em breve)
-    </div>
-
-    <form>
-      <h2>Reportar Problema</h2>
-
-      <label for="categoria">Categoria:</label>
+  <header><ion-icon name="cart"></ion-icon>InfoCity - Protótipo</header>
+  
+  <div id="map"></div>
+  
+  <div class="container">
+    <button class="btn" onclick="toggleForm()">➕ Reportar Problema</button>
+    
+    <form id="reportForm">
+      <label>Categoria:</label>
       <select id="categoria">
-        <option value="lixo">Lixo Acumulado</option>
-        <option value="buraco">Buraco na Rua</option>
-        <option value="enchente">Enchente / Inundação</option>
-        <option value="outro">Outro</option>
+        <option value="Lixo">Lixo acumulado</option>
+        <option value="Buraco">Buraco na rua</option>
+        <option value="Enchente">Enchente</option>
+        <option value="Outro">Outro</option>
       </select>
-
-      <label for="descricao">Descrição:</label>
-      <textarea id="descricao" rows="4" placeholder="Descreva o problema..."></textarea>
-
-      <label for="foto">Foto (opcional):</label>
-      <input type="file" id="foto" accept="image/*">
-
-      <label for="local">Localização (bairro, rua...):</label>
-      <input type="text" id="local" placeholder="Ex: Rua das Flores, 123 - Centro">
-
-      <button type="submit">Enviar Relato</button>
+      
+      <label>Descrição:</label>
+      <textarea id="descricao" placeholder="Descreva o problema..."></textarea>
+      
+      <button type="button" class="btn" onclick="adicionarProblema()">Enviar</button>
     </form>
-
-    <div class="problem-list">
-      <h2>Últimos Problemas Reportados</h2>
-      <ul>
-        <li>📍 Rua A, Centro - Buraco grande na via</li>
-        <li>📍 Avenida B - Lixo acumulado próximo ao ponto de ônibus</li>
-        <li>📍 Rua C - Alagamento após chuva forte</li>
-      </ul>
-    </div>
-
-  </main>
-
-  <footer>
-    &copy; 2025 InfoCity - Projeto com o Rafa
-  </footer>
-
+    
+    <h3>📋 Problemas Reportados:</h3>
+    <div id="listaProblemas"></div>
+  </div>
+  
+  <!-- JS do Leaflet -->
+   <script src="https://unpkg.com/ionicons@4.5.10-0/dist/ionicons.js"></script>
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <script>
+    // Inicia o mapa
+    const map = L.map('map').setView([-23.55, -46.63], 12); // SP como exemplo
+    
+    // Camada do OpenStreetMap
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
+    
+    // Alternar exibição do formulário
+    function toggleForm() {
+      const form = document.getElementById("reportForm");
+      form.style.display = form.style.display === "block" ? "none" : "block";
+    }
+    
+    // Adicionar problema no mapa e na lista
+    function adicionarProblema() {
+      const categoria = document.getElementById("categoria").value;
+      const descricao = document.getElementById("descricao").value;
+      
+      if (!descricao) {
+        alert("Por favor, escreva uma descrição.");
+        return;
+      }
+      
+      // Pega localização atual do mapa (centro)
+      const { lat, lng } = map.getCenter();
+      
+      // Adiciona marcador no mapa
+      L.marker([lat, lng]).addTo(map)
+        .bindPopup(`<b>${categoria}</b><br>${descricao}`)
+        .openPopup();
+      
+      // Adiciona na lista
+      const lista = document.getElementById("listaProblemas");
+      const div = document.createElement("div");
+      div.className = "report";
+      div.innerHTML = `<b>${categoria}</b><br>${descricao}<br>📍 Local: ${lat.toFixed(4)}, ${lng.toFixed(4)}`;
+      
+      lista.prepend(div);
+      
+      // Reseta formulário
+      document.getElementById("reportForm").reset();
+      toggleForm();
+    }
+  </script>
 </body>
-</html>
+</html>     
+
+
